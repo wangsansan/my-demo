@@ -15,4 +15,9 @@ public class MyRequestFactory implements ObjectFactory<MyRequest>, Serializable 
     public MyRequest getObject() throws BeansException {
         return new MyServletRequest();
     }
+
+    @Override
+    public String toString() {
+        return "my request factory";
+    }
 }
