@@ -1,7 +1,6 @@
 package com.wang.demo.controller;
 
-import com.wang.demo.service.MyRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wang.demo.service.request.MyRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

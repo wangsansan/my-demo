@@ -1,4 +1,4 @@
-package com.wang.demo.service;
+package com.wang.demo.service.request;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;

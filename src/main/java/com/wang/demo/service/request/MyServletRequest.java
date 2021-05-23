@@ -1,4 +1,4 @@
-package com.wang.demo.service;
+package com.wang.demo.service.request;
 
 import java.util.Random;
 

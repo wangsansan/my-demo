@@ -1,7 +1,7 @@
-package com.wang.demo.service.processor;
+package com.wang.demo.service.request.processor;
 
-import com.wang.demo.service.MyRequest;
-import com.wang.demo.service.MyRequestFactory;
+import com.wang.demo.service.request.MyRequest;
+import com.wang.demo.service.request.MyRequestFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
