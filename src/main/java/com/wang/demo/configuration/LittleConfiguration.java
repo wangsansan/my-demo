@@ -4,7 +4,7 @@ import com.wang.demo.service.Little.LittleService;
 import com.wang.demo.service.Little.PrimaryLittleServiceImpl;
 import com.wang.demo.service.Little.SecondLittleServiceImpl;
 import com.wang.demo.service.request.MyRequest;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,25 +15,26 @@ import javax.annotation.Resource;
  * @Date: 2021/5/23 7:24 下午
  */
 @Configuration
+@ConditionalOnProperty(value = "little.use")
 public class LittleConfiguration {
 
-    @Value("${little.use}")
-    private Integer littleUse;
-
-    public static final int second = 2;
+    @Resource
+    private MyRequest myRequest;
 
     @Bean
-    @Resource
-    public LittleService littleService(MyRequest myRequest) {
-        if (littleUse == second) {
-            SecondLittleServiceImpl secondLittleService  = new SecondLittleServiceImpl();
-            secondLittleService.setMyRequest(myRequest);
-            return secondLittleService;
-        }
-
+    @ConditionalOnProperty(value = "little.use", havingValue = "1")
+    public LittleService primaryLittleService() {
         PrimaryLittleServiceImpl primaryLittleService = new PrimaryLittleServiceImpl();
         primaryLittleService.setMyRequest(myRequest);
         return primaryLittleService;
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "little.use", havingValue = "2")
+    public LittleService sendLittleService() {
+        SecondLittleServiceImpl secondLittleService  = new SecondLittleServiceImpl();
+        secondLittleService.setMyRequest(myRequest);
+        return secondLittleService;
     }
 
 }
