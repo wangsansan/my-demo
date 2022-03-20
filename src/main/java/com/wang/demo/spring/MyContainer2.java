@@ -111,6 +111,12 @@ public class MyContainer2 {
             }
         }
 
+        // TODO: 2022/3/20
+        /**
+         * 1. 如果先进行aop再进行inject呢？
+         * 2. 看看spring针对接口的做法是不是和我们一样
+         */
+
         return proxyed;
     }
 
