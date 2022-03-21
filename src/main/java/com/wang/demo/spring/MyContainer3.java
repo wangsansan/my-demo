@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @Author: Wangchunsheng
  * @Date: 2022/3/8 7:22 下午
- * 这个实现了复杂的循环依赖，双方都需要进行proxy
+ * 这个实现了复杂的循环依赖，双方都需要进行proxy：接口不生成BeanDefinition，只是作为实现类的BeanDefinition的属性
  */
 @Slf4j
 public class MyContainer3 {

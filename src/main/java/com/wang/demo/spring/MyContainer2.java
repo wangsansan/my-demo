@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * @Author: Wangchunsheng
  * @Date: 2022/3/8 7:22 下午
- * 这个实现了复杂的循环依赖，双方都需要进行proxy
+ * 这个实现了复杂的循环依赖，双方都需要进行proxy:接口也生成自己的BeanDefinition
  */
 @Slf4j
 public class MyContainer2 {
