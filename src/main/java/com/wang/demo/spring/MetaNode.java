@@ -6,6 +6,8 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,5 +23,7 @@ public class MetaNode {
     private Class clazz;
 
     private Map<String, Field> fieldMap;
+
+    private List<Class> interfaces;
 
 }
