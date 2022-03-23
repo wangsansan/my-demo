@@ -1,5 +1,6 @@
 package com.wang.demo.spring;
 
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -68,8 +69,8 @@ public class MyContainer5 {
                 if (BEAN_MAP.containsKey(entry.getKey())) {
                     continue;
                 }
-                Object instance = complete(entry.getKey());
-                addToContext(entry.getKey(), instance);
+                Pair<Class, Object> instancePair = complete(entry.getKey());
+                addToContext(instancePair.getKey(), instancePair.getValue());
             }
 
 
@@ -91,7 +92,7 @@ public class MyContainer5 {
         BEAN_MAP.putIfAbsent(clazz, instance);
     }
 
-    private static Object complete(Class clazz) throws Exception {
+    private static Pair<Class, Object> complete(Class clazz) throws Exception {
         clazz = findRealInjectClass(clazz);
         MetaNode metaNode = META_NODE_MAP.get(clazz);
         if (Objects.isNull(metaNode)) {
@@ -100,7 +101,7 @@ public class MyContainer5 {
 
         // 如果容器里已经有了对应的数据，那么就返回
         if (getBean(metaNode.getClazz()) != null) {
-            return getBean(metaNode.getClazz());
+            return new Pair(clazz, getBean(metaNode.getClazz()));
         }
 
         // 1. 实例化
@@ -115,7 +116,7 @@ public class MyContainer5 {
             injectField(instance, metaNode.getFieldMap());
         }
 
-        return proxyed;
+        return new Pair<>(clazz, proxyed);
     }
 
     private static void registerClass() throws Exception{
@@ -134,11 +135,11 @@ public class MyContainer5 {
         for (Map.Entry<String, Field> fieldEntry : MapUtils.emptyIfNull(fieldMap).entrySet()) {
             Field field = fieldEntry.getValue();
             Class<?> type = field.getType();
-            Object toInject = complete(type);
+            Pair<Class, Object> toInjectData = complete(type);
             field.setAccessible(true);
             // 此处的写法有点ugly，因为 findRealInjectClass 会调用多次
-            BEAN_MAP.put(findRealInjectClass(type), toInject);
-            field.set(instance, toInject);
+            BEAN_MAP.put(toInjectData.getKey(), toInjectData.getValue());
+            field.set(instance, toInjectData.getValue());
         }
     }
 
