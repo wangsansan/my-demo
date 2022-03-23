@@ -8,16 +8,16 @@ import org.apache.commons.collections4.MapUtils;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
  * @Author: Wangchunsheng
  * @Date: 2022/3/8 7:22 下午
- * 这个实现了复杂的循环依赖，双方都需要进行proxy：接口不生成BeanDefinition，只是作为实现类的BeanDefinition的属性
- * 这个实现不好，因为无法通过complete(interface.class)获取到对象
+ * 先proxy，后inject
  */
 @Slf4j
-public class MyContainer3 {
+public class MyContainer5 {
 
     /**
      * 保存所有需要处理的类信息：包括类以及他们需要设置的属性
@@ -29,7 +29,9 @@ public class MyContainer3 {
      */
     private static Map<Class, Object> BEAN_MAP = new HashMap<>();
 
-    private static Map<Class, Object> NON_FIELD_BEAN_MAP = new HashMap<>();
+//    private static Map<Class, Object> NON_FIELD_BEAN_MAP = new HashMap<>();
+
+    private static Map<Class, Object> EARLY_BEAN_MAP = new HashMap<>();
 
     private static Set<Class> CACHE_PROXYED = new HashSet<>();
 
@@ -50,7 +52,8 @@ public class MyContainer3 {
         if (Objects.nonNull(o)) {
             return o;
         }
-        return NON_FIELD_BEAN_MAP.get(clazz);
+        o = EARLY_BEAN_MAP.get(clazz);
+        return o;
     }
 
     public static void main(String[] args) {
@@ -84,11 +87,12 @@ public class MyContainer3 {
         if (!clazz.isInterface()) {
             clazzSet.addAll(Arrays.asList(clazz.getInterfaces()));
         }
-        NON_FIELD_BEAN_MAP.entrySet().removeIf(it -> clazzSet.contains(it.getKey()));
+        EARLY_BEAN_MAP.entrySet().removeIf(it -> it.getKey().equals(clazz));
         BEAN_MAP.putIfAbsent(clazz, instance);
     }
 
     private static Object complete(Class clazz) throws Exception {
+        clazz = findRealInjectClass(clazz);
         MetaNode metaNode = META_NODE_MAP.get(clazz);
         if (Objects.isNull(metaNode)) {
             return null;
@@ -101,26 +105,15 @@ public class MyContainer3 {
 
         // 1. 实例化
         Object instance = instance(metaNode.getClazz());
-        if (MapUtils.isNotEmpty(metaNode.getFieldMap())) {
-            // 2. 属性设置
-            injectField(instance, metaNode.getFieldMap());
-        }
-
-        // 3. aop
+        // 2. aop
         Object proxyed = wrapIfNecessary(metaNode.getClazz(), instance);
 
-        if (instance == proxyed) {
-            if (!BEAN_MAP.containsKey(metaNode.getClazz())) {
-                throw new Exception(String.format("clazz %s have been aop proxyed more than once", clazz));
-            } else {
-                return BEAN_MAP.get(metaNode.getClazz());
-            }
-        }
+        EARLY_BEAN_MAP.put(clazz, proxyed);
 
-        // TODO: 2022/3/20
-        /**
-         * 1. 如果先进行aop再进行inject呢？
-         */
+        if (MapUtils.isNotEmpty(metaNode.getFieldMap())) {
+            // 3. 属性设置
+            injectField(instance, metaNode.getFieldMap());
+        }
 
         return proxyed;
     }
@@ -131,9 +124,9 @@ public class MyContainer3 {
     }
 
     private static Object instance(Class clazz) throws Exception{
-        Constructor constructor = clazz.getDeclaredConstructor();
-        Object o = constructor.newInstance();
-        NON_FIELD_BEAN_MAP.putIfAbsent(clazz, o);
+        Object o = clazz.newInstance();
+//        BEAN_SUPPLIER.putIfAbsent(clazz, () -> wrapIfNecessary(clazz, o));
+//        NON_FIELD_BEAN_MAP.putIfAbsent(clazz, o);
         return o;
     }
 
@@ -141,19 +134,11 @@ public class MyContainer3 {
         for (Map.Entry<String, Field> fieldEntry : MapUtils.emptyIfNull(fieldMap).entrySet()) {
             Field field = fieldEntry.getValue();
             Class<?> type = field.getType();
-            type = findRealInjectClass(type);
             Object toInject = complete(type);
             field.setAccessible(true);
-            /**
-             * 此处正是使用三级工厂的原因，如果只使用二级工厂
-             * 那么此时譬如C1和C2循环依赖，当C2注入了一个proxy的C1之后，没有保存到某个地方
-             * 再回到C1的complete过程中，此时会导致最后容器里的proxy-C1和C2注入的proxy-C1不是同一个对象
-             * 我此处是让C2注入的proxy-C1直接覆盖了一级工厂（BEAN_MAP）里的对象，
-             * 然后在回到C1的complete过程中，直接判断有没有一级工厂里有没有C1，如果有就直接返回，也就不会进行proxy的过程了
-             */
-            Object o = wrapIfNecessary(type, toInject);
-            BEAN_MAP.putIfAbsent(type, o);
-            field.set(instance, o);
+            // 此处的写法有点ugly，因为 findRealInjectClass 会调用多次
+            BEAN_MAP.put(findRealInjectClass(type), toInject);
+            field.set(instance, toInject);
         }
     }
 
@@ -177,7 +162,7 @@ public class MyContainer3 {
     }
 
     private static Object wrapIfNecessary(Class clazz, Object object) {
-        if (CACHE_PROXYED.contains(clazz)) {
+        if (CACHE_PROXYED.contains(clazz.getName())) {
             return object;
         }
         Class[] interfaces = clazz.getInterfaces();
