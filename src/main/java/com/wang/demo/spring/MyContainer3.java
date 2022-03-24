@@ -131,8 +131,7 @@ public class MyContainer3 {
     }
 
     private static Object instance(Class clazz) throws Exception{
-        Constructor constructor = clazz.getDeclaredConstructor();
-        Object o = constructor.newInstance();
+        Object o = clazz.newInstance();
         NON_FIELD_BEAN_MAP.putIfAbsent(clazz, o);
         return o;
     }

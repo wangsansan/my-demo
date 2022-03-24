@@ -126,8 +126,7 @@ public class MyContainer2 {
     }
 
     private static Object instance(Class clazz) throws Exception{
-        Constructor constructor = clazz.getDeclaredConstructor();
-        Object o = constructor.newInstance();
+        Object o = clazz.newInstance();
         NON_FIELD_BEAN_MAP.putIfAbsent(clazz, o);
         if (!clazz.isInterface()) {
             Class[] interfaces = clazz.getInterfaces();

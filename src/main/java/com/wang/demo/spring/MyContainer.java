@@ -84,8 +84,7 @@ public class MyContainer {
     }
 
     private static Object instance(Class clazz) throws Exception{
-        Constructor constructor = clazz.getDeclaredConstructor();
-        return constructor.newInstance();
+        return clazz.newInstance();
     }
 
     private static void injectField(Object instance, Map<String, Field> fieldMap) throws Exception {

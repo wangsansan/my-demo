@@ -150,8 +150,7 @@ public class MyContainer4 {
     }
 
     private static Object instance(Class clazz) throws Exception{
-        Constructor constructor = clazz.getDeclaredConstructor();
-        Object o = constructor.newInstance();
+        Object o = clazz.newInstance();
         BEAN_SUPPLIER.putIfAbsent(clazz, () -> wrapIfNecessary(clazz, o));
 //        NON_FIELD_BEAN_MAP.putIfAbsent(clazz, o);
         return o;
