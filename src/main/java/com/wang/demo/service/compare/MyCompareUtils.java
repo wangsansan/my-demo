@@ -33,12 +33,18 @@ public class MyCompareUtils {
         toyList.add(toy1);
         toyList.add(toy3);
         List<Toy> toyList1 = new ArrayList<>();
+        List<Toy> toyList2 = new ArrayList<>();
+        List<Toy> toyList3 = new ArrayList<>();
         toyList1.add(toy4);
         toyList1.add(toy2);
+        toyList2.add(toy3);
+        toyList2.add(toy1);
+        toyList3.add(toy2);
+        toyList3.add(toy4);
         Son son1 = new Son("wang", toyList);
-        Son son2 = new Son("wang", toyList);
-        Son son3 = new Son("wang1", toyList1);
-        Son son4 = new Son("wang1", toyList1);
+        Son son2 = new Son("wang", toyList1);
+        Son son3 = new Son("wang1", toyList2);
+        Son son4 = new Son("wang1", toyList3);
         List<Son> sons1 = new ArrayList<>();
         List<Son> sons2 = new ArrayList<>();
         sons1.add(son1);
@@ -47,6 +53,8 @@ public class MyCompareUtils {
         sons2.add(son2);
         Father father1 = new Father("sheng", sons1);
         Father father2 = new Father("sheng", sons2);
+        System.out.println(father1);
+        System.out.println(father2);
         System.out.println(equals(Father.class, father1, father2));
     }
 
