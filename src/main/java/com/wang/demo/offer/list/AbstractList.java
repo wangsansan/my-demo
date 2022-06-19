@@ -1,6 +1,6 @@
 package com.wang.demo.offer.list;
 
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -14,11 +14,12 @@ public class AbstractList {
 
     static {
         List<ListNode> nodeList = Lists.newArrayList();
-        for (int i = 0; i < 10; i++) {
+        int nodeNumber = 9;
+        for (int i = 0; i < nodeNumber; i++) {
             nodeList.add(new ListNode(i, null));
         }
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < nodeNumber - 1; i++) {
             nodeList.get(i).setNextNode(nodeList.get(i + 1));
         }
         HEAD = nodeList.get(0);
