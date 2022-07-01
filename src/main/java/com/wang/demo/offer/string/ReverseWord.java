@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 反转单词
  */
-public class ReverseWord {
+public class ReverseWord extends AbstractString {
 
     public static String solution(String str) {
         if (StringUtils.isBlank(str)) {
@@ -42,20 +42,14 @@ public class ReverseWord {
         int from = 0;
         for (int i = 0; i < result.length; i++) {
             if (i == result.length - 1) {
-                doReverse(result, from, i);
+                reverse(result, from, i);
             } else if (result[i] == ' ') {
-                doReverse(result, from, i - 1);
+                reverse(result, from, i - 1);
                 from = i + 1;
             }
         }
 
         return new String(result);
-    }
-
-    private static void doReverse(char[] array, int index1, int index2) {
-        char temp = array[index1];
-        array[index1] = array[index2];
-        array[index2] = temp;
     }
 
     public static void main(String[] args) {
