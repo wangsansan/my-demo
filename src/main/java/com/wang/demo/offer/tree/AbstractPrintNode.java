@@ -32,4 +32,20 @@ public class AbstractPrintNode {
         treeNode5.setRight(treeNode11);
     }
 
+    public static TreeNode convertToTree(Integer[] array) {
+        TreeNode[] tree = new TreeNode[array.length];
+        for (int i = 0; i < array.length; i++) {
+            tree[i] = new TreeNode(array[i]);
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (2 * i + 1 < array.length) {
+                tree[i].setLeft(tree[2 * i + 1]);
+            }
+            if (2 * i + 2 < array.length) {
+                tree[i].setRight(tree[2 * i + 2]);
+            }
+        }
+        return tree[0];
+    }
+
 }

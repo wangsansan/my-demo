@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TreeNode {
 
-    private int value;
+    private Integer value;
 
     private TreeNode left;
 
     private TreeNode right;
 
-    public TreeNode(int value) {
+    public TreeNode(Integer value) {
         this.value = value;
     }
 

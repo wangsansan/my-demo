@@ -20,8 +20,7 @@ public class Node implements MyInterface {
 
     public static void main(String[] args) {
         try {
-            Constructor<Node> declaredConstructor = Node.class.getDeclaredConstructor();
-            Node node = declaredConstructor.newInstance();
+            Node node = Node.class.newInstance();
             Constructor<Item> itemConstructor = Item.class.getDeclaredConstructor();
             Item item = itemConstructor.newInstance();
             Field[] declaredFields = Node.class.getDeclaredFields();
