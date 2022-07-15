@@ -1,5 +1,7 @@
 package com.wang.demo.offer.tree;
 
+import java.util.Objects;
+
 /**
  * @Author: Wangchunsheng
  * @Date: 2022/6/12 7:07 上午
@@ -46,6 +48,14 @@ public class AbstractPrintNode {
             }
         }
         return tree[0];
+    }
+
+    public static boolean nodeIsNull(TreeNode node) {
+        return Objects.isNull(node) || Objects.isNull(node.getValue());
+    }
+
+    public static boolean isLeafNode(TreeNode node) {
+        return nodeIsNull(node.getLeft()) && nodeIsNull(node.getRight());
     }
 
 }
