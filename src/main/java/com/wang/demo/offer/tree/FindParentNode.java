@@ -26,12 +26,12 @@ public class FindParentNode extends AbstractPrintNode{
     }
 
     public static TreeNodeInfo findNearestParent(TreeNode treeNode, TreeNode treeNode1, TreeNode treeNode2) {
-        if (Objects.isNull(treeNode)) {
+        if (nodeIsNull(treeNode)) {
             return new TreeNodeInfo(null, false, false);
         }
 
-        boolean findNode1 = treeNode.getValue() == treeNode1.getValue();
-        boolean findNode2 = treeNode.getValue() == treeNode2.getValue();
+        boolean findNode1 = treeNode.getValue().equals(treeNode1.getValue());
+        boolean findNode2 = treeNode.getValue().equals(treeNode2.getValue());
         TreeNode targetNode = null;
         if (Objects.nonNull(treeNode.getLeft())) {
             TreeNodeInfo leftInfo = findNearestParent(treeNode.getLeft(), treeNode1, treeNode2);

@@ -45,7 +45,7 @@ public class MaxCountNumber extends AbstractPrintNode {
         }
 
         if (count > maxFreq) {
-            result.clear();;
+            result.clear();
             result.add(value);
         } else if (count ==  maxFreq) {
             result.add(count);
