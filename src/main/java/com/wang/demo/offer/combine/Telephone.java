@@ -35,24 +35,31 @@ public class Telephone {
         process(chars, 0);
     }
 
-    private static void process(char[] chars, int start) {
+    /**
+     * 对照这道题和 FindSum 以及 FindCombining的解法差别
+     * 为什么这个解法中间没有一次主的for循环
+     * 因为这个题目不需要回溯，而不管是数字组合，还是求和数字组合都是涉及到回溯剪枝的
+     * 或者可以理解为剪枝的节点取值不一样了：
+     * 之前的两道题的节点取值可以通过for循环来限定，而这道题的节点取值只能靠映射字母来限定
+     * @param chars
+     * @param index
+     */
+    private static void process(char[] chars, int index) {
         if (path.size() == chars.length) {
             result.add(String.join("", path));
             return;
         }
-        for (int i = start; i < chars.length; i++) {
-            int value = chars[i] - ('1' - 1);
-            List<String> current = map.get(value);
-            for (String s : current) {
-                path.push(s);
-                process(chars, i + 1);
-                path.pop();
-            }
+        int value = chars[index] - ('1' - 1);
+        List<String> current = map.get(value);
+        for (String s : current) {
+            path.push(s);
+            process(chars, index + 1);
+            path.pop();
         }
     }
 
     public static void main(String[] args) {
-        String str = "234";
+        String str = "23";
         solution(str);
         System.out.println(result);
     }
