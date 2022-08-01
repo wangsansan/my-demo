@@ -5,6 +5,7 @@ package com.wang.demo.offer.combine;
  * @Date: 2022/7/31 9:30 上午
  */
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -21,30 +22,29 @@ public class FindSum2 {
     private static int sum = 0;
 
     public static void solution(int[] candidates, int target) {
-        process(candidates, target);
+        // 排序是为了优化，在后面不需要从头开始查找，同时也可以把[2,3,3]和[3,2,3]给去重
+        candidates = Arrays.stream(candidates).sorted().toArray();
+        process(candidates, target, 0);
     }
 
-    private static void process(int[] candidates, int target) {
+    private static void process(int[] candidates, int target, int index) {
         if (sum == target) {
             List<Integer> temp = new LinkedList<>(path);
-            // 此处是为了去重，防止[2,2,3],[2,3,2],[3,2,2]都被加入到result中
-            temp = temp.stream().sorted().collect(Collectors.toList());
-            if (!result.contains(temp)) {
-                result.add(temp);
-            }
+            result.add(temp);
             return;
         } else if (sum > target) {
             return;
         }
 
-        for (int i = 0; i < candidates.length; i++) {
-            if (candidates[i] <= target - sum) {
-                path.push(candidates[i]);
-                sum += candidates[i];
-                process(candidates, target);
-                path.pop();
-                sum -= candidates[i];
+        for (int i = index; i < candidates.length; i++) {
+            if (candidates[i] > target - sum) {
+                break;
             }
+            path.push(candidates[i]);
+            sum += candidates[i];
+            process(candidates, target, i);
+            path.pop();
+            sum -= candidates[i];
         }
 
     }
@@ -58,7 +58,7 @@ public class FindSum2 {
         result.clear();
         path.clear();
         sum = 0;
-        int[] candidates1 = {2, 3, 5};
+        int[] candidates1 = {2, 5, 3};
         int target1 = 8;
         solution(candidates1, target1);
         System.out.println(result);
