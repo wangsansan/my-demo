@@ -37,7 +37,8 @@ public class FindSum4 {
          */
         for (int i = index; i < candidates.length; i++) {
             /**
-             * 如果一个数在
+             * 如果一个数在同一层已经处理过，跳过
+             * 注意看这题的解法，FindSum3里为了去重，使用Set，本题使用剪枝，使得根本不用去重
              */
             if (i > index && candidates[i] == candidates[i-1]) {
                 continue;
