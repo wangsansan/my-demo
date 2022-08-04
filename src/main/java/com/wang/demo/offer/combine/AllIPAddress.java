@@ -19,8 +19,6 @@ public class AllIPAddress {
 
     private static Stack<Integer> path = new Stack<>();
 
-    private static int num = 0;
-
     public static void solution(String str) {
         process(str, 0);
     }
@@ -34,10 +32,11 @@ public class AllIPAddress {
         }
         for (int i = 1; i <= 3; i++) {
             int endIndex = startIndex + i;
+            // endIndex = str.length()也是合理的
             if (endIndex > str.length()) {
                 break;
             }
-            // 0开头的非0字符串直接break
+            // 0开头的非0字符串直接break，subString是左开右闭[x,y)
             String sub1 = str.substring(startIndex, endIndex);
             if (sub1.startsWith("0") && sub1.length() > 1) {
                 break;
