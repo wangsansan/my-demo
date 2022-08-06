@@ -30,6 +30,13 @@ public class AllIPAddress {
             }
             return;
         }
+        /**
+         * 此处的i是为了控制每一层的结束index，每一层的开始index其实是一定的，也就是上面传下来的
+         * 同理求回文那道题，由于每一层的开始index一定是上一层的结束index，然后结束index可以不使用，因为可以每一层的结束index是startIndex + 1
+         * 其实这道题和求回文那道题都是切割问题，其他的都是组合问题。
+         * 切割问题和组合问题的差别就在于同一层的startIndex会不会变：切割问题不会变，组合问题会变
+         * 不过切割问题的endIndex可能会变：这道题和判断回文问题的差别
+         */
         for (int i = 1; i <= 3; i++) {
             int endIndex = startIndex + i;
             // endIndex = str.length()也是合理的
