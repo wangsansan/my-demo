@@ -37,6 +37,9 @@ public class FindTheCircle {
                  */
                 ListNode index1 = slow;
                 ListNode index2 = head;
+                /**
+                 * 一个从头结点出发，一个从slow出发，最终相遇在入环点
+                 */
                 while (index1 != index2) {
                     index1 = index1.getNextNode();
                     index2 = index2.getNextNode();
