@@ -33,14 +33,9 @@ public class JumpToEnd {
         return false;
     }
 
-    public static boolean solution1(int[] nums) {
-        return solution2(nums, nums.length - 1, nums[nums.length - 1]);
-    }
-
     public static void main(String[] args) {
         int[] nums = {3, 2, 1, 0, 4};
         System.out.println(solution(nums));
-        System.out.println(solution1(nums));
     }
 
 }
