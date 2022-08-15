@@ -16,13 +16,15 @@ public class SpinK2MaxSum {
 
     public static int solution(int[] nums, int k) {
         // 1. 按照绝对值从大到小排序
-        List<Integer> newNums = Arrays.stream(nums)
-                .boxed().sorted((a, b) -> Math.abs(b) - Math.abs(a)).collect(Collectors.toList());
+        nums = Arrays.stream(nums)
+                .boxed().sorted((a, b) -> Math.abs(b) - Math.abs(a))
+                .mapToInt(Integer::intValue)
+                .toArray();
 
         // 2. 从前往后遍历，把所有的负数变为正数
-        for (int i = 0; i < newNums.size(); i++) {
-            if (newNums.get(i) < 0) {
-                newNums.set(i, Math.negateExact(newNums.get(i)));
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                nums[i] = Math.negateExact(nums[i]);
                 k--;
                 if (k == 0) {
                     break;
@@ -31,15 +33,12 @@ public class SpinK2MaxSum {
         }
 
         // 3. 当所有数都变为正数之后，选取最后一个数（绝对值最小的数）进行来回取反
-        if (k > 0) {
-            while (k > 0) {
-                int lastIndex = newNums.size() - 1;
-                newNums.set(lastIndex, Math.negateExact(newNums.get(lastIndex)));
-                k--;
-            }
+        if ((k & 1) > 0) {
+            int lastIndex = nums.length - 1;
+            nums[lastIndex] = Math.negateExact(nums[lastIndex]);
         }
 
-        return newNums.stream().reduce(0, Integer::sum);
+        return Arrays.stream(nums).reduce(0, Integer::sum);
     }
 
     public static void main(String[] args) {
