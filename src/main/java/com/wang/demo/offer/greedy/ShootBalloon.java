@@ -31,38 +31,22 @@ public class ShootBalloon {
                 .map(it -> new BalloonInfo(it.getKey(), it.getValue()))
                 .sorted(Comparator.comparing(BalloonInfo::getStart))
                 .collect(Collectors.toList());
-        int count = 0;
-        for (int i = balloonList.size() - 1; i >= 0; i--) {
-            count++;
+        int count = 1;
+        int maxStart = balloonList.get(balloonList.size() - 1).getStart();
+        for (int i = balloonList.size() - 2; i >= 0; i--) {
             BalloonInfo current = balloonList.get(i);
-            current.shoot = true;
-            if (i == 0) {
-                break;
-            }
-            BalloonInfo before = balloonList.get(i - 1);
-            if (hasSameSpace(before, current)) {
-                before.shoot = true;
-                i--;
+            if (current.end < maxStart) {
+                count++;
+                maxStart = current.getStart();
             }
         }
         return count;
-    }
-
-    private static boolean hasSameSpace(BalloonInfo balloonInfo1, BalloonInfo balloonInfo2) {
-        BalloonInfo smaller = balloonInfo1.start < balloonInfo2.start ? balloonInfo1 : balloonInfo2;
-        BalloonInfo bigger = smaller == balloonInfo1 ? balloonInfo2 : balloonInfo1;
-        if (smaller.end < bigger.start) {
-            return false;
-        }
-        return true;
     }
 
     static class BalloonInfo {
         int start;
 
         int end;
-
-        boolean shoot;
 
         public int getStart() {
             return start;
