@@ -27,35 +27,20 @@ public class ShootBalloon {
         if (points.size() == 1) {
             return 1;
         }
-        List<BalloonInfo> balloonList = points.parallelStream()
-                .map(it -> new BalloonInfo(it.getKey(), it.getValue()))
-                .sorted(Comparator.comparing(BalloonInfo::getStart))
+        List<Pair<Integer, Integer>> balloonList = points.parallelStream()
+                .sorted(Comparator.comparing(Pair::getKey))
                 .collect(Collectors.toList());
         int count = 1;
-        int maxStart = balloonList.get(balloonList.size() - 1).getStart();
+        int maxStart = balloonList.get(balloonList.size() - 1).getKey();
         for (int i = balloonList.size() - 2; i >= 0; i--) {
-            BalloonInfo current = balloonList.get(i);
-            if (current.end < maxStart) {
+            Pair<Integer, Integer> current = balloonList.get(i);
+            if (current.getValue() < maxStart) {
                 count++;
-                maxStart = current.getStart();
+                maxStart = current.getKey();
             }
+
         }
         return count;
-    }
-
-    static class BalloonInfo {
-        int start;
-
-        int end;
-
-        public int getStart() {
-            return start;
-        }
-
-        public BalloonInfo(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
     }
 
     public static void main(String[] args) {
