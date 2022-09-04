@@ -30,6 +30,7 @@ public class SplitArrayToSame {
         }
 
         int target = sum / 2 ;
+        //dp[j]表示背包容量为j的情况下，能装下最多的石头重量
         int[] dp = new int[target + 1];
         for (int i = 0; i < nums.length; i++) {
             // 此处01背包问题，为什么j的取值最大是target
@@ -38,6 +39,7 @@ public class SplitArrayToSame {
             }
         }
 
+        // 背包容量为j的情况下，能否正好装下重量为j的石头
         return dp[target] ==  target;
     }
 

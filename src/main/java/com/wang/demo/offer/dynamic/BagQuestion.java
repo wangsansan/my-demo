@@ -46,7 +46,7 @@ public class BagQuestion {
      * 所以对背包重量逆序遍历，使得原本的先后顺序反过来，j较大的时候不再依赖较小值，也就不可能出现同一个物品多次添加被计算
      */
     public static int solution1(int[] weights, int[] values, int bagSize) {
-        // dp[j] 代表重量为j的背包能放下物品价值
+        // dp[j] 表示背包容量为j的情况下，能放下最多的物品价值
         int[] dp = new int[bagSize + 1];
         for (int i = 0; i < weights.length; i++) {
             for (int j = bagSize; j > 0; j--) {
