@@ -5,7 +5,10 @@ package com.wang.demo.offer.dynamic;
  * @Date: 2022/9/5 8:00 上午
  */
 
+import org.springframework.util.StopWatch;
+
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * 给定一个非负数数组，a1，a2.。。an，和一个目标数S
@@ -48,10 +51,58 @@ public class TargetSum {
         return dp[target];
     }
 
+    private static Stack<Integer>  path = new Stack<>();
+    private static int count = 0;
+
+    public static int solution1(int[] a, int S) {
+        int sum = Arrays.stream(a)
+                .reduce(0, Integer::sum);
+        if (Math.abs(S) > sum) {
+            return 0;
+        }
+
+        /**
+         * 一个和为偶数的非负数组仅靠+和-无法凑成奇数；
+         * 同理，一个和为奇数的非负数组仅靠+和-无法凑成偶数
+         */
+        if ((S + sum) % 2 == 1 ) {
+            return 0;
+        }
+
+        // 本题使用01背包思路解决，最终需要解决的问题是使用+得到目标和有多少种方式，剩余的都是-
+        // target - (sum - target) = S => target = (S + sum) / 2
+        int target = (S + sum) / 2;
+        doProcess(a, 0, target);
+        return count;
+    }
+
+    private static void doProcess(int[] a, int startIndex, int target) {
+        Integer currentSum = path.stream()
+                .reduce(0, Integer::sum);
+        if (currentSum == target) {
+            count++;
+            return;
+        }
+
+        for (int i = startIndex; i < a.length; i++) {
+            path.push(a[i]);
+            doProcess(a, i + 1, target);
+            path.pop();
+        }
+    }
+
     public static void main(String[] args) {
         int[] a = {1, 1, 1, 1, 1};
         int S = 3;
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         System.out.println(solution(a, S));
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeSeconds());
+        stopWatch.start();
+        System.out.println(solution1(a, S));
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeSeconds());
     }
 
 }
