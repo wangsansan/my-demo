@@ -1,4 +1,4 @@
-package com.wang.demo.offer.dynamic.files;
+package com.wang.demo.offer.dynamic;
 
 /**
  * @Author: Wangchunsheng
