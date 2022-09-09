@@ -21,6 +21,7 @@
 ### 2. 完全背包问题
 #### 2.1 求最大、最小值
 两层for循环的内层，对target进行for循环，需要从小到大进行遍历，因为需要重复
+此时的两层for循环里外层对换没有差别
 `for(int i = 0; int i < nums.length; i++) {
     for(int j = nums[i]; j <= target; j++){
         dp[j] = Math.max(dp[j], dp[j - nums[i]] + values[i])
