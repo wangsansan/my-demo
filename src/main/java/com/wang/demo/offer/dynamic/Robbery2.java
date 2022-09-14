@@ -36,11 +36,18 @@ public class Robbery2 {
             Integer pre = dp.get(i - 1).getKey();
             Integer ppre = dp.get(i - 2).getKey();
             int tmp = ppre + nums[i];
-            if (i == nums.length - 1) {
-                if (pre >= tmp) {
-                    // 这种情况，没有偷最后一家，所以不管有没有偷第一家都没事儿
-                    dp.add(Pair.of(pre, dp.get(i - 1).getValue()));
+            if (pre >= tmp) {
+                dp.add(Pair.of(pre, dp.get(i - 1).getValue()));
+            } else {
+                if (i != nums.length - 1) {
+                    /**
+                     * 不是最后一家的时候，什么情况最多，就偷哪家
+                     */
+                    dp.add(Pair.of(tmp, dp.get(i - 2).getValue()));
                 } else {
+                    /**
+                     * 最后一家是否偷盗，需要具体分析
+                     */
                     // 没偷第一家
                     if (!dp.get(i - 2).getValue()) {
                         dp.add(Pair.of(tmp, false));
@@ -48,12 +55,6 @@ public class Robbery2 {
                         // 偷了第一家
                         dp.add(Pair.of(pre, dp.get(i - 1).getValue()));
                     }
-                }
-            } else {
-                if (pre >= tmp) {
-                    dp.add(Pair.of(pre, dp.get(i - 1).getValue()));
-                } else {
-                    dp.add(Pair.of(tmp, dp.get(i - 2).getValue()));
                 }
             }
         }
@@ -74,6 +75,9 @@ public class Robbery2 {
         return Math.max(doProcess(nums, 0, nums.length - 2), doProcess(nums, 1, nums.length - 1));
     }
 
+    /**
+     * 这道题的题解确实厉害，不过我上面那样也是对的
+     */
     private static int doProcess(int[] nums, int start, int end) {
         int[] dp = new int[end + 1];
         dp[start] = nums[start];
