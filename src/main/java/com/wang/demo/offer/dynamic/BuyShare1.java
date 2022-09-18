@@ -33,13 +33,27 @@ public class BuyShare1 {
         return Math.max(dp[prices.length - 1][0], dp[prices.length - 1][1]);
     }
 
+    public static int solution1(int[] prices) {
+        int[] dp = new int[2];
+        dp[0] = -prices[0];
+        dp[1] = 0;
+        for (int i = 0; i < prices.length; i++) {
+            dp[0] = Math.max(dp[0], -prices[i]);
+            dp[1] = Math.max(dp[1], dp[0] + prices[i]);
+        }
+        return dp[1];
+    }
+
     public static void main(String[] args) {
         int[] prices = {7, 1, 5, 3, 6, 4};
         System.out.println(solution(prices));
+        System.out.println(solution1(prices));
         int[] prices1 = {7, 6, 4, 3, 1};
         System.out.println(solution(prices1));
+        System.out.println(solution1(prices1));
         int[] prices2 = {2, 3, 4, 5, 1};
         System.out.println(solution(prices2));
+        System.out.println(solution1(prices2));
     }
 
 }

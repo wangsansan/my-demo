@@ -40,13 +40,33 @@ public class BuyShare2 {
         return dp[prices.length - 1][1];
     }
 
+    public static int solution1(int[] prices) {
+        int[] dp = new int[2];
+        dp[0] = -prices[0];
+        dp[1] = 0;
+        for (int i = 1; i < prices.length; i++) {
+            /**
+             * 除了保持原状
+             * 1. 如果有股票，可以换现金
+             * 2. 如果有现金，可以换股票
+             */
+            dp[0] = Math.max(dp[0], dp[1] - prices[i]);
+            dp[1] = Math.max(dp[1], dp[0] + prices[i]);
+        }
+
+        return dp[1];
+    }
+
     public static void main(String[] args) {
         int[] prices = {7, 1, 5, 3, 6, 4};
         System.out.println(solution(prices));
+        System.out.println(solution1(prices));
         int[] prices1 = {7, 6, 4, 3, 1};
         System.out.println(solution(prices1));
+        System.out.println(solution1(prices1));
         int[] prices2 = {1, 2, 3, 4, 5};
         System.out.println(solution(prices2));
+        System.out.println(solution1(prices2));
     }
 
 
