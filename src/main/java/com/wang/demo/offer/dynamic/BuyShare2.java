@@ -5,6 +5,8 @@ package com.wang.demo.offer.dynamic;
  * @Date: 2022/9/18 9:24 上午
  */
 
+import java.util.Arrays;
+
 /**
  * 买卖股票的最佳时机
  * 可以多次买入和卖出
@@ -35,6 +37,7 @@ public class BuyShare2 {
              */
             dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] - prices[i]);
             dp[i][1] = Math.max(dp[i - 1][0] + prices[i], dp[i - 1][1]);
+            System.out.println(Arrays.toString(dp[i]));
         }
 
         return dp[prices.length - 1][1];
@@ -50,8 +53,15 @@ public class BuyShare2 {
              * 1. 如果有股票，可以换现金
              * 2. 如果有现金，可以换股票
              */
+            /**
+             * 如果第i天买股票，发现用之前剩余现金买股票比一直持有股票更有钱的时候
+             * 那么第i天持有现金的取值最大值不会变，不会因为卖股票而获得更多
+             * 因为如果dp[0] = dp[1] - prices[i]；那么dp[1] = dp[1]就成了必然
+             * 此处的必然是因为，如果发生了dp[0] = dp[1] - prices[i]，说明之前的股票交易挣钱了，且当前不存在股票交易，所以dp[0] + prices[i] 也就没意义了
+             */
             dp[0] = Math.max(dp[0], dp[1] - prices[i]);
             dp[1] = Math.max(dp[1], dp[0] + prices[i]);
+            System.out.println(Arrays.toString(dp));
         }
 
         return dp[1];
