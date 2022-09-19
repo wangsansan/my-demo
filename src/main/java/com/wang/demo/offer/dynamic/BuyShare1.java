@@ -10,6 +10,11 @@ package com.wang.demo.offer.dynamic;
  */
 public class BuyShare1 {
 
+    /**
+     * 做完BuyShare3之后才回头看这道题
+     * dp[i][0]可以理解为，截止到第i天进行了第一次股票购买，拥有的现金
+     * dp[i][1]可以理解为，截止到第i天进行了第一次股票售卖，拥有的现金
+     */
     public static int solution(int[] prices) {
         int[][] dp = new int[prices.length][2];
         // dp[i][0]表示第i天持有股票时拥有现金
