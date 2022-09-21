@@ -9,7 +9,6 @@ package com.wang.demo.offer.dynamic;
  * 买卖股票的最佳时机
  * 可以多次买入和卖出
  * 不能同时参与多只股票交易
- * 最多交易两次
  */
 public class BuyShare4 {
 
