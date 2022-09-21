@@ -25,11 +25,11 @@ public class BuyShare3 {
     public static int doProcess(int[] prices) {
         int[][] dp = new int[prices.length][5];
         /**
-         * dp[i][0]代表截止到第i天，不操作
-         * dp[i][1]代表截止到第i天，进行了第一次购买
-         * dp[i][2]代表截止到第i天，进行了第一次股票售卖
-         * dp[i][3]代表截止到第i天，进行了第二次购买
-         * dp[i][4]代表截止到第i天，进行了第二次股票售卖
+         * dp[i][0]第i天，不操作
+         * dp[i][1]第i天，处于第一次买入的状态
+         * dp[i][2]第i天，处于第一次卖出的状态
+         * dp[i][3]第i天，处于第二次买入的状态
+         * dp[i][4]第i天，处于第二次卖出的状态
          */
         dp[0][0] = 0;
         dp[0][1] = -prices[0];
