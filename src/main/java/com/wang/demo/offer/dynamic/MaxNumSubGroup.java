@@ -1,4 +1,4 @@
-package com.wang.demo.offer.greedy;
+package com.wang.demo.offer.dynamic;
 
 /**
  * @Author: Wangchunsheng
@@ -7,7 +7,7 @@ package com.wang.demo.offer.greedy;
 
 /**
  * 给定一个二进制字符串数组strs和两个整数m和n
- * 找出并返回最大子集的大小，该自己中最多有m个0和n个1
+ * 找出并返回最大子集的大小，该子集中最多有m个0和n个1
  */
 public class MaxNumSubGroup {
 
