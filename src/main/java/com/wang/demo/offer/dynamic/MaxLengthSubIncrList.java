@@ -8,6 +8,11 @@ import java.util.Arrays;
  */
 public class MaxLengthSubIncrList {
 
+    /**
+     * 这道题和MaxLengthSubList对比可以发现
+     * 非连续递增子序列时，dp[i]和dp[0...i-1]相关，因为非连续的最大子序列不知道出现在前置的哪一位上
+     * 连续递增子序列时,dp[i]只和dp[i-1]相关
+     */
     public static int solution(int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;

@@ -6,7 +6,7 @@ package com.wang.demo.offer.dynamic;
  */
 
 /**
- * 求两个数组的最长重复子序列长度
+ * 求两个数组的最长连续重复子序列长度
  */
 public class MaxLengthSameSubList {
 
