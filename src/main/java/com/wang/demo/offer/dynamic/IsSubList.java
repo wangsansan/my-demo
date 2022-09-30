@@ -12,6 +12,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class IsSubList {
 
+    /**
+     * 这道题因为放在动态规划下面，所以第一反应是使用动态规划做
+     * 但是其实双指针遍历应该也可以实现
+     * 切不可让刷题范围影响了思考
+     * 思维定势，唉
+     */
     public static boolean solution(String s, String t) {
         if (StringUtils.isBlank(s) || StringUtils.isBlank(t)) {
             return false;
