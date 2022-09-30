@@ -58,8 +58,6 @@ public class CountOfSubList {
         String s = "rabbbit";
         String t = "rabbit";
         System.out.println(solution(s, t));
-        ab;
-        abb;
     }
 
 }
