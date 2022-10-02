@@ -6,7 +6,7 @@ import java.util.Arrays;
  * @Author: Wangchunsheng
  * @Date: 2022/9/24 8:31 上午
  */
-public class MaxLengthSubIncrList {
+public class MaxLengthSubContinueList {
 
     /**
      * 这道题和MaxLengthSubList对比可以发现

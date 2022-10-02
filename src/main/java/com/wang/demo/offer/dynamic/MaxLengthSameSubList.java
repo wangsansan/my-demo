@@ -8,7 +8,7 @@ package com.wang.demo.offer.dynamic;
 /**
  * 最长重复子序列
  */
-public class MaxLengthSameSubXuLie {
+public class MaxLengthSameSubList {
 
     /**
      * 动态规划的难点：

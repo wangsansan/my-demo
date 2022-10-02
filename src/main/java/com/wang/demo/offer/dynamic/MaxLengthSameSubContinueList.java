@@ -8,7 +8,7 @@ package com.wang.demo.offer.dynamic;
 /**
  * 求两个数组的最长连续重复子序列长度
  */
-public class MaxLengthSameSubList {
+public class MaxLengthSameSubContinueList {
 
     public static int solution(int[] nums1, int[] nums2) {
         // dp[i][j]代表下标i的nums1和下标j的nums2的最长重复子序列长度
