@@ -23,6 +23,9 @@ public class MaxLengthOfHuiWen {
             return 1;
         }
         int[][] dp = new int[s.length() + 1][s.length() + 1];
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = 1;
+        }
         int max = 0;
         for (int i = s.length() - 1; i > 0; i--) {
             for (int j = i; j < s.length(); j++) {
