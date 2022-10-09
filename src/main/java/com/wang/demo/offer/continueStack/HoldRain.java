@@ -48,11 +48,32 @@ public class HoldRain {
         return realResult;
     }
 
+    public static int solution1(int[] nums) {
+        int[] maxLeft = new int[nums.length];
+        int[] maxRight = new int[nums.length];
+        maxLeft[0] = nums[0];
+        maxRight[nums.length - 1] = nums[nums.length - 1];
+        for (int i = 1; i < nums.length; i++) {
+            maxLeft[i] = Math.max(maxLeft[i - 1], nums[i]);
+        }
+        for (int i = nums.length - 2; i >= 0; i--) {
+            maxRight[i] = Math.max(maxRight[i + 1], nums[i]);
+        }
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int height = Math.min(maxLeft[i], maxRight[i]);
+            result += (height - nums[i]);
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
         int[] nums = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
         System.out.println(solution(nums));
+        System.out.println(solution1(nums));
         int[] nums1 = {4, 2, 0, 3, 2, 5};
         System.out.println(solution(nums1));
+        System.out.println(solution1(nums1));
     }
 
 }
