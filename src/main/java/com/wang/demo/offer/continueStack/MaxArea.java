@@ -42,9 +42,43 @@ public class MaxArea {
         return result;
     }
 
+    public static int solution1(int[] nums) {
+        // 左边第一个小于nums[i]的下标
+        int[] minLeft = new int[nums.length];
+        // 右边第一个小于nums[i]的下标
+        int[] minRight = new int[nums.length];
+        minLeft[0] = -1;
+        minRight[nums.length - 1] = nums.length;
+        for (int i = 1; i < nums.length; i++) {
+            int t = i - 1;
+            while (t >= 0 && nums[t] >= nums[i]) {
+                // 从右往左找，左边第一个小于nums[i]的下标
+                t--;
+            }
+            minLeft[i] = t;
+        }
+
+        for (int i = nums.length - 2; i >= 0; i--) {
+            int t = i + 1;
+            while (t < nums.length && nums[t] >= nums[i]) {
+                // 从左往右找，右边第一个小于nums[i]的下标
+                t++;
+            }
+            minRight[i] = t;
+        }
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int sum = nums[i] * (minRight[i] - minLeft[i] - 1);
+            result = Math.max(sum, result);
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         int[] nums = {2, 1, 5, 6, 2, 3};
         System.out.println(solution(nums));
+        System.out.println(solution1(nums));
     }
 
 }
