@@ -19,4 +19,18 @@ public class ListNode {
 
     private ListNode nextNode;
 
+    public static ListNode generateList(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return null;
+        }
+        ListNode head = new ListNode(nums[0], null);
+        ListNode pre = head;
+        for (int i = 1; i < nums.length; i++) {
+            ListNode node = new ListNode(nums[i], null);
+            pre.setNextNode(node);
+            pre = node;
+        }
+        return head;
+    }
+
 }
