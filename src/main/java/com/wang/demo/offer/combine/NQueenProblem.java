@@ -68,7 +68,7 @@ public class NQueenProblem {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < n; i++) {
             if (index.snd != i) {
-                stringBuilder.append(".");
+                stringBuilder.append("*");
             } else {
                 stringBuilder.append("Q");
             }
