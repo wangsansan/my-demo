@@ -60,24 +60,19 @@ public class CountOfMaxLengthSubSequence {
         // 1. 求出最长子序列长度
         int maxValue = Arrays.stream(dp).max().getAsInt();
         // 2. 求出最长子序长度的所有下标
-        List<Integer> maxValueIndexList = new ArrayList<>();
+        int result = 0;
         for (int i = 0; i < dp.length; i++) {
             if (dp[i] == maxValue) {
-                maxValueIndexList.add(i);
+                result += count[i];
             }
-        }
-        // 3. count中每个下标代表该下标的长度个数
-        int result = 0;
-        for (Integer index : maxValueIndexList) {
-            result += count[index];
         }
         return result;
     }
 
     public static void main(String[] args) {
-        //nums  1, 1, 2, 2, 9, 8, 7, 10
-        //dp    1, 1, 2, 2, 3, 3, 3, 4
-        //count 1, 1, 2, 2, 4, 4, 4, 12
+        //nums  1, 1, 2, 2, 9, 8, 7, 11，11
+        //dp    1, 1, 2, 2, 3, 3, 3, 4， 4
+        //count 1, 1, 2, 2, 4, 4, 4, 12，12
         int[] nums = {1, 3, 5, 4, 7};
         System.out.println(solution(nums));
         int[] nums1 = {2, 2, 2, 2, 2};
