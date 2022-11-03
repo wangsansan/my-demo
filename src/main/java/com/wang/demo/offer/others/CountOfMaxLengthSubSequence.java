@@ -48,6 +48,7 @@ public class CountOfMaxLengthSubSequence {
                     int org = dp[i];
                     int compare = dp[j] + 1;
                     if (org == compare) {
+                        // 此处要注意
                         count[i] = count[j] + count[i];
                     } else if (org < compare) {
                         dp[i] = compare;
