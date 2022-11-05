@@ -2,6 +2,9 @@ package com.wang.demo.offer.others;
 
 import com.google.common.collect.Sets;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,25 +24,22 @@ public class KeyAndRoom {
 
     private static Set<Integer> path = Sets.newHashSet();
 
-    public static boolean solution(int[][] rooms) {
-        if (rooms == null || rooms.length <= 1) {
+    public static boolean solution(List<List<Integer>> rooms) {
+        if (rooms == null || rooms.size() <= 1) {
             return true;
         }
-        int n = rooms.length;
+        int n = rooms.size();
         path.add(0);
         return process(rooms, 0, n);
     }
 
-    private static boolean process(int[][] rooms, int currentRoom, int n) {
+    private static boolean process(List<List<Integer>> rooms, int currentRoom, int n) {
         if (path.size() == n) {
             return true;
         }
 
-        for (int i = 0; i < rooms[currentRoom].length; i++) {
-            int nextRoom = rooms[currentRoom][i];
-            if (nextRoom == -1) {
-                continue;
-            }
+        for (int i = 0; i < rooms.get(currentRoom).size(); i++) {
+            int nextRoom = rooms.get(currentRoom).get(i);
             if (!path.add(nextRoom)) {
                 continue;
             }
@@ -49,27 +49,39 @@ public class KeyAndRoom {
                 return true;
             }
 
-            path.remove(nextRoom);
+            /**
+             * 本题不需要回溯，因为不是为了寻找一条路径
+             */
+//            path.remove(nextRoom);
         }
 
         return false;
     }
 
     public static void main(String[] args) {
-        int[][] rooms = {
-                {-1, -1, -1, 1},
-                {-1, -1, -1, 2},
-                {-1, -1, -1, 3},
-                {-1, -1, -1, 0}
-        };
+//        List<List<Integer>> rooms = Arrays.asList(
+//                Collections.singletonList(1),
+//                Collections.singletonList(2),
+//                Collections.singletonList(3),
+//                Collections.singletonList(0));
+//        System.out.println(solution(rooms));
+//        path.clear();
+        List<List<Integer>> rooms = Arrays.asList(
+                Collections.singletonList(1),
+                Collections.singletonList(2),
+                Collections.singletonList(3),
+                Arrays.asList(4, 5),
+                Collections.singletonList(0),
+                Collections.singletonList(0)
+        );
         System.out.println(solution(rooms));
         path.clear();
-        int[][] rooms1 = {
-                {-1, -1, 1, 3},
-                {-1, 3, 0, 1},
-                {-1, -1, 2, 0},
-                {-1, -1, -1, 0}
-        };
+        List<List<Integer>> rooms1 = Arrays.asList(
+                Arrays.asList(1, 3),
+                Arrays.asList(3, 0, 1),
+                Arrays.asList(2, 0),
+                Collections.singletonList(0)
+        );
         System.out.println(solution(rooms1));
     }
 
