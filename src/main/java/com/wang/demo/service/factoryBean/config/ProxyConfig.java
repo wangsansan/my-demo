@@ -2,6 +2,7 @@ package com.wang.demo.service.factoryBean.config;
 
 import com.wang.demo.service.factoryBean.MyProxy;
 import com.wang.demo.service.factoryBean.MyRealService;
+import com.wang.demo.service.factoryBean.ProxyFactoryBean;
 import com.wang.demo.service.factoryBean.service.ProxyService1;
 import com.wang.demo.service.factoryBean.service.ProxyService2;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +38,13 @@ public class ProxyConfig {
         MyProxy proxy = new MyProxy();
         proxy.setProxyClass(ProxyService2.class);
         return proxy;
+    }
+
+    @Bean
+    @Lazy
+    public ProxyFactoryBean proxyService3() {
+        System.out.println("init proxyService3");
+        return new ProxyFactoryBean();
     }
 
     @Bean
