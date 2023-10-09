@@ -1,5 +1,6 @@
 package com.wang.demo.service.factoryBean.config;
 
+import com.wang.demo.service.factoryBean.MyFactoryBean;
 import com.wang.demo.service.factoryBean.MyProxy;
 import com.wang.demo.service.factoryBean.MyRealService;
 import com.wang.demo.service.factoryBean.ProxyFactoryBean;
@@ -16,12 +17,6 @@ import org.springframework.context.annotation.Lazy;
 @Configuration
 public class ProxyConfig {
 
-    /**
-     * 此处代码是个比较不合常理的实验
-     * 可以看到 proxyService1 和 proxyService2
-     * @return
-     */
-
     @Bean
     @Lazy
     public MyProxy proxyService1() {
@@ -33,9 +28,10 @@ public class ProxyConfig {
 
     @Bean
     @Lazy
-    public MyProxy proxyService2() {
+    // 此处如果不指定返回值泛型，照样会被其他实例注入时强制执行
+    public MyFactoryBean<ProxyService2> proxyService2() {
         System.out.println("init proxyService2");
-        MyProxy proxy = new MyProxy();
+        MyFactoryBean<ProxyService2> proxy = new MyFactoryBean<>();
         proxy.setProxyClass(ProxyService2.class);
         return proxy;
     }
