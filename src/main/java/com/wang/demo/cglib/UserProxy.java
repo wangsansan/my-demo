@@ -3,6 +3,7 @@ package com.wang.demo.cglib;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class UserProxy extends User {
     }
 
     private static List<Advisor> findAdvisors() {
-        return Arrays.asList(new Advisor1(), new Advisor2());
+        return Collections.singletonList(new Advisor1());
     }
 
     public static void main(String[] args) {
@@ -57,7 +58,7 @@ public class UserProxy extends User {
         ReflectionUtils.doWithMethods(User.class, method -> {
             try {
                 TestAop annotation = method.getAnnotation(TestAop.class);
-                System.out.println("run " + annotation.value());
+                System.out.println("run method:" + annotation.value());
                 method.setAccessible(true);
                 method.invoke(userBean);
             } catch (Exception e) {
