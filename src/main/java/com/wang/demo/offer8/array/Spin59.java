@@ -1,8 +1,6 @@
 package com.wang.demo.offer8.array;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @Author: Wangchunsheng
