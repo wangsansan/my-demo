@@ -2,6 +2,7 @@ package com.wang.demo.netty.invoke;
 
 import com.wang.demo.netty.Client;
 import com.wang.demo.netty.RpcClient;
+import com.wang.demo.netty.RpcClientManager;
 import com.wang.demo.netty.RpcServer;
 import com.wang.demo.netty.client.HelloService;
 import com.wang.demo.netty.handler.RpcResponseHandler;
@@ -80,7 +81,7 @@ public class Application {
                     request.setParameterTypes(method.getParameterTypes());
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     RpcResponseHandler.futureMap.put(request.getSequenceId(), future);
-                    RpcClient.getChannel(serviceAddress).writeAndFlush(request);
+                    RpcClientManager.getChannel(serviceAddress).writeAndFlush(request);
 
                     Object o = null;
                     if (timeOut <= 0) {

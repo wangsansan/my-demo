@@ -29,26 +29,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class RpcClient {
 
-    public static Map<ServiceAddress, Channel> channelMap = new ConcurrentHashMap<>();
-
     private static LoggingHandler loggingHandler = new LoggingHandler();
 
     public static final RpcResponseHandler rpcResponseHandler = new RpcResponseHandler();
 
     public static final RpcCodec RPC_CODEC = new RpcCodec();
-
-    public static Channel getChannel(ServiceAddress serviceAddress) {
-        if (channelMap.get(serviceAddress) != null) {
-            return channelMap.get(serviceAddress);
-        }
-        synchronized (RpcClient.class) {
-            if (channelMap.get(serviceAddress) == null) {
-                Channel channel = initChannel(serviceAddress.getHost(), serviceAddress.getPort());
-                channelMap.put(serviceAddress, channel);
-            }
-            return channelMap.get(serviceAddress);
-        }
-    }
 
     public static Channel initChannel(String host, Integer port) {
         String connectHost = StringUtils.defaultString(host, "localhost");
@@ -91,7 +76,7 @@ public class RpcClient {
         request.setReturnType(String.class);
         request.setArgs(new Object[]{"wang"});
         request.setParameterTypes(new Class[]{String.class});
-        getChannel(new ServiceAddress("localhost", 8084)).writeAndFlush(request);
+        RpcClientManager.getChannel(new ServiceAddress("localhost", 8084)).writeAndFlush(request);
     }
 
 }
