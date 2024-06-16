@@ -31,7 +31,8 @@ public class Application {
 
     @SneakyThrows
     public static void main(String[] args) {
-        HelloService helloService = getProxyInstance(HelloService.class);
+        Application application = new Application();
+        HelloService helloService = application.getProxyInstance(HelloService.class);
         if (Objects.isNull(helloService)) {
             log.error("oops");
         }
@@ -39,12 +40,12 @@ public class Application {
         helloService.sayHello("sheng");
     }
 
-    public static <T> T getProxyInstance(Class<T> serviceClass) {
+    public <T> T getProxyInstance(Class<T> serviceClass) {
         return getProxyInstance(serviceClass, -1);
     }
 
 
-    public static <T> T getProxyInstance(Class<T> serviceClass, int timeOut) {
+    public <T> T getProxyInstance(Class<T> serviceClass, int timeOut) {
         String serviceKey = serviceClass.getName();
         List<ServiceAddress> serviceAddressList = ServiceRegistryManager.findServiceAddress(serviceKey);
         if (CollectionUtils.isEmpty(serviceAddressList)) {
@@ -55,13 +56,27 @@ public class Application {
         return (T) Proxy.newProxyInstance(
                 serviceClass.getClassLoader(),
                 new Class[]{serviceClass},
-                (proxy1, method, arg) -> {
+                (proxy, method, args) -> {
+                    if (Object.class == method.getDeclaringClass()) {
+                        String name = method.getName();
+                        if ("equals".equals(name)) {
+                            return proxy == args[0];
+                        } else if ("hashCode".equals(name)) {
+                            return System.identityHashCode(proxy);
+                        } else if ("toString".equals(name)) {
+                            return proxy.getClass().getName() + "@" +
+                                    Integer.toHexString(System.identityHashCode(proxy)) +
+                                    ", with InvocationHandler " + this;
+                        } else {
+                            throw new IllegalStateException(String.valueOf(method));
+                        }
+                    }
                     RpcRequest request = new RpcRequest();
                     request.setSequenceId(seq.getAndDecrement());
                     request.setClassName(HelloService.class.getName());
                     request.setMethodName(method.getName());
                     request.setReturnType(method.getReturnType());
-                    request.setArgs(arg);
+                    request.setArgs(args);
                     request.setParameterTypes(method.getParameterTypes());
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     RpcResponseHandler.futureMap.put(request.getSequenceId(), future);
