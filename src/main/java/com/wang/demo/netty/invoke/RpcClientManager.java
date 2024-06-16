@@ -1,10 +1,9 @@
-package com.wang.demo.netty;
+package com.wang.demo.netty.invoke;
 
+import com.wang.demo.netty.RpcClient;
 import com.wang.demo.netty.register.ServiceAddress;
 import io.netty.channel.Channel;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @Author: Wangchunsheng
@@ -13,7 +12,7 @@ import java.util.Map;
  */
 public class RpcClientManager {
 
-    private static LRU channelCache = new LRU(5, 10, 0.75f, true);
+    private static LRU<ServiceAddress, Channel> channelCache = new LRU(5, 10, 0.75f, true);
 
     public static Channel getChannel(ServiceAddress serviceAddress) {
         if (channelCache.get(serviceAddress) != null) {
@@ -28,22 +27,4 @@ public class RpcClientManager {
         }
     }
 
-
-    static class LRU extends LinkedHashMap<ServiceAddress, Channel> {
-
-        private int maxSize;
-
-        public LRU(int maxSize,
-                   int initialCapacity,
-                   float loadFactor,
-                   boolean accessOrder) {
-            super(initialCapacity, loadFactor, accessOrder);
-            this.maxSize = maxSize;
-        }
-
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<ServiceAddress, Channel> eldest) {
-            return size() > maxSize;
-        }
-    }
 }
