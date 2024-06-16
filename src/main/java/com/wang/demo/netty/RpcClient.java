@@ -4,15 +4,18 @@ import com.wang.demo.netty.client.HelloService;
 import com.wang.demo.netty.handler.MessageFrameHandler;
 import com.wang.demo.netty.handler.RpcCodec;
 import com.wang.demo.netty.handler.RpcResponseHandler;
+import com.wang.demo.netty.register.ServiceAddress;
 import com.wang.demo.netty.web.request.RpcRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
 import java.util.Objects;
@@ -38,13 +41,27 @@ public class RpcClient {
         }
         synchronized (RpcClient.class) {
             if (Objects.isNull(channel)) {
-                initChannel();
+                initChannel("localhost", 8084);
             }
             return channel;
         }
     }
 
-    public static void initChannel() {
+    public static Channel getChannel(ServiceAddress serviceAddress) {
+        if (Objects.nonNull(channel)) {
+            return channel;
+        }
+        synchronized (RpcClient.class) {
+            if (Objects.isNull(channel)) {
+                initChannel(serviceAddress.getHost(), serviceAddress.getPort());
+            }
+            return channel;
+        }
+    }
+
+    public static void initChannel(String host, Integer port) {
+        String connectHost = StringUtils.defaultString(host, "localhost");
+        int connectPort = Objects.isNull(port) ? 8084 : port;
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
         Bootstrap bootstrap = new Bootstrap();
@@ -61,7 +78,7 @@ public class RpcClient {
                         ch.pipeline().addLast(loggingHandler);
                     }
                 })
-                .connect("localhost", 8084);
+                .connect(connectHost, connectPort);
         try {
             channelFuture.sync();
             channel = channelFuture.channel();
@@ -82,7 +99,6 @@ public class RpcClient {
         request.setArgs(new Object[]{"wang"});
         request.setParameterTypes(new Class[]{String.class});
         getChannel().writeAndFlush(request);
-
     }
 
 }
