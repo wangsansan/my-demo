@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author: Wangchunsheng
@@ -27,7 +29,7 @@ import java.util.Objects;
 @Slf4j
 public class RpcClient {
 
-    public static Channel channel = null;
+    public static Map<ServiceAddress, Channel> channelMap = new ConcurrentHashMap<>();
 
     private static LoggingHandler loggingHandler = new LoggingHandler();
 
@@ -35,31 +37,20 @@ public class RpcClient {
 
     public static final RpcCodec RPC_CODEC = new RpcCodec();
 
-    public static Channel getChannel() {
-        if (Objects.nonNull(channel)) {
-            return channel;
-        }
-        synchronized (RpcClient.class) {
-            if (Objects.isNull(channel)) {
-                initChannel("localhost", 8084);
-            }
-            return channel;
-        }
-    }
-
     public static Channel getChannel(ServiceAddress serviceAddress) {
-        if (Objects.nonNull(channel)) {
-            return channel;
+        if (channelMap.get(serviceAddress) != null) {
+            return channelMap.get(serviceAddress);
         }
         synchronized (RpcClient.class) {
-            if (Objects.isNull(channel)) {
-                initChannel(serviceAddress.getHost(), serviceAddress.getPort());
+            if (channelMap.get(serviceAddress) == null) {
+                Channel channel = initChannel(serviceAddress.getHost(), serviceAddress.getPort());
+                channelMap.put(serviceAddress, channel);
             }
-            return channel;
+            return channelMap.get(serviceAddress);
         }
     }
 
-    public static void initChannel(String host, Integer port) {
+    public static Channel initChannel(String host, Integer port) {
         String connectHost = StringUtils.defaultString(host, "localhost");
         int connectPort = Objects.isNull(port) ? 8084 : port;
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -81,13 +72,15 @@ public class RpcClient {
                 .connect(connectHost, connectPort);
         try {
             channelFuture.sync();
-            channel = channelFuture.channel();
+            Channel channel = channelFuture.channel();
             channel.closeFuture().addListener((future -> {
                 workerGroup.shutdownGracefully();
             }));
+            return channel;
         } catch (Exception e) {
             workerGroup.shutdownGracefully();
         }
+        return null;
     }
 
     public static void main(String[] args) {
@@ -98,7 +91,7 @@ public class RpcClient {
         request.setReturnType(String.class);
         request.setArgs(new Object[]{"wang"});
         request.setParameterTypes(new Class[]{String.class});
-        getChannel().writeAndFlush(request);
+        getChannel(new ServiceAddress("localhost", 8084)).writeAndFlush(request);
     }
 
 }
