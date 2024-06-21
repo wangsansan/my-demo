@@ -4,6 +4,11 @@ import com.wang.demo.netty.RpcClient;
 import com.wang.demo.netty.register.ServiceAddress;
 import io.netty.channel.Channel;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * @Author: Wangchunsheng
@@ -12,19 +17,29 @@ import io.netty.channel.Channel;
  */
 public class RpcClientManager {
 
-    private static LRU<ServiceAddress, Channel> channelCache = new LRU(5, 10, 0.75f, true);
+    private static LRU<ServiceAddress, ChannelPool> channelCache = new LRU(5, 10, 0.75f, true);
 
-    public static Channel getChannel(ServiceAddress serviceAddress) {
-        if (channelCache.get(serviceAddress) != null) {
-            return channelCache.get(serviceAddress);
+    public static ChannelUseStrategy channelUseStrategy;
+
+    private static ChannelUseStrategy defaultChannelUseStrategy = new RobinStrategy();
+
+    public static Channel getChannel(ServiceAddress serviceAddress, int poolSize) {
+        channelCache.putIfAbsent(serviceAddress, new ChannelPool(poolSize));
+        ChannelPool channelPool = channelCache.get(serviceAddress);
+        return digChannel(serviceAddress, channelPool);
+    }
+
+    /**
+     * 默认用轮询的方式来进行连接池的选择
+     * @param channelPool
+     * @return
+     */
+    private static Channel digChannel(ServiceAddress serviceAddress, ChannelPool channelPool) {
+        ChannelUseStrategy useStrategy = channelUseStrategy;
+        if (Objects.isNull(useStrategy)) {
+            useStrategy = defaultChannelUseStrategy;
         }
-        synchronized (RpcClientManager.class) {
-            if (channelCache.get(serviceAddress) == null) {
-                Channel channel = RpcClient.initChannel(serviceAddress.getHost(), serviceAddress.getPort());
-                channelCache.put(serviceAddress, channel);
-            }
-            return channelCache.get(serviceAddress);
-        }
+        return useStrategy.digChannel(serviceAddress, channelPool);
     }
 
 }

@@ -27,8 +27,10 @@ public class Application {
 
     @SneakyThrows
     public static void main(String[] args) {
+        // 连接池选择链接策略，默认是轮询，测试设置为随机
+        //RpcClientManager.channelUseStrategy = new RandomStrategy();
         Application application = new Application();
-        HelloService helloService = application.getProxyInstance(HelloService.class);
+        HelloService helloService = application.getProxyInstance(HelloService.class, 3);
         if (Objects.isNull(helloService)) {
             log.error("oops");
         }
@@ -36,12 +38,12 @@ public class Application {
         helloService.sayHello("sheng");
     }
 
-    public <T> T getProxyInstance(Class<T> serviceClass) {
-        return getProxyInstance(serviceClass, -1);
+    public <T> T getProxyInstance(Class<T> serviceClass, int channelSize) {
+        return getProxyInstance(serviceClass, -1, channelSize);
     }
 
 
-    public <T> T getProxyInstance(Class<T> serviceClass, int timeOut) {
+    public <T> T getProxyInstance(Class<T> serviceClass, int timeOut, int poolSize) {
         String serviceKey = serviceClass.getName();
         List<ServiceAddress> serviceAddressList = ServiceRegistryManager.findServiceAddress(serviceKey);
         if (CollectionUtils.isEmpty(serviceAddressList)) {
@@ -76,7 +78,7 @@ public class Application {
                     request.setParameterTypes(method.getParameterTypes());
                     CompletableFuture<Object> future = new CompletableFuture<>();
                     RpcResponseHandler.futureMap.put(request.getSequenceId(), future);
-                    RpcClientManager.getChannel(serviceAddress).writeAndFlush(request);
+                    RpcClientManager.getChannel(serviceAddress, poolSize).writeAndFlush(request);
 
                     Object o = null;
                     if (timeOut <= 0) {

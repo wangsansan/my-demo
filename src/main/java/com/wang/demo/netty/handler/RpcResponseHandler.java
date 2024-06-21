@@ -2,6 +2,7 @@ package com.wang.demo.netty.handler;
 
 import com.wang.demo.netty.web.response.RpcResponse;
 import com.wang.demo.utils.JsonUtils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author: Wangchunsheng
  * @Date: 2024/6/13 21:56
  */
+@ChannelHandler.Sharable
 public class RpcResponseHandler extends SimpleChannelInboundHandler<RpcResponse> {
 
     public static Map<Integer, CompletableFuture> futureMap = new ConcurrentHashMap<>();

@@ -72,7 +72,7 @@ public class RpcClient {
         request.setReturnType(String.class);
         request.setArgs(new Object[]{"wang"});
         request.setParameterTypes(new Class[]{String.class});
-        RpcClientManager.getChannel(new ServiceAddress("localhost", 8084)).writeAndFlush(request);
+        RpcClientManager.getChannel(new ServiceAddress("localhost", 8084), 3).writeAndFlush(request);
     }
 
 }
