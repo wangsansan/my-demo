@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class RpcClientManager {
 
+    // 此处有问题，只能保持5个节点的连接，lru应该是放到channelPool里面
     private static LRU<ServiceAddress, ChannelPool> channelCache = new LRU(5, 10, 0.75f, true);
 
     public static ChannelUseStrategy channelUseStrategy;
