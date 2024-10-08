@@ -43,11 +43,11 @@ public class RpcClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new MessageFrameHandler());
-                        ch.pipeline().addLast(loggingHandler);
-                        ch.pipeline().addLast(RPC_CODEC);
-                        ch.pipeline().addLast(rpcResponseHandler);
-                        ch.pipeline().addLast(loggingHandler);
+                        ch.pipeline().addLast(new MessageFrameHandler()); // 解决粘包问题
+                        ch.pipeline().addLast(loggingHandler);  // 前置日志
+                        ch.pipeline().addLast(RPC_CODEC); // 协议解析：包含序列化
+                        ch.pipeline().addLast(rpcResponseHandler); // response的处理，通过sequenceId，给对应的request设置future
+                        ch.pipeline().addLast(loggingHandler); // 后置日志
                     }
                 })
                 .connect(connectHost, connectPort);

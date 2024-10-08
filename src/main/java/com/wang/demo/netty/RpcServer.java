@@ -51,11 +51,11 @@ public class RpcServer {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline()
-                                .addLast(new MessageFrameHandler())
-                                .addLast("before log", loggingHandler)
-                                .addLast("rpc codec", RPC_CODEC)
-                                .addLast("request handler", rpcRequestHandler)
-                                .addLast("after log", loggingHandler);
+                                .addLast(new MessageFrameHandler()) // 解决粘包问题
+                                .addLast("before log", loggingHandler) // 前置日志
+                                .addLast("rpc codec", RPC_CODEC) // 协议解析：包含反序列化
+                                .addLast("request handler", rpcRequestHandler) // 实际request处理，反射invoke
+                                .addLast("after log", loggingHandler); // 后置日志
                     }
                 })
                 .bind(host, port);
